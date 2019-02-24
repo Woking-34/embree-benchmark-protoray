@@ -2,9 +2,9 @@
 Quick and dirty fixes to support Windows CUDA OptiX builds - work in progress. OptiX default search path set to version 5.1.1 - project uses OptiX Prime API.
 
 <p align="center"><img src="docs/screenshot_0001.png" width="600" /></p>
-<p align="center">**Diffuse Path Tracing - San Miguel**</p>
+<p align="center">Diffuse Path Tracing - San Miguel</p>
 <p align="center"><img src="docs/screenshot_0003.png" width="600" /></p>
-<p align="center">**Diffuse Path Tracing - Power Plant**</p>
+<p align="center">Diffuse Path Tracing - Power Plant</p>
 
 ## Requirements
  - [TBB](https://www.threadingbuildingblocks.org/) - Threading Building Blocks
@@ -32,9 +32,7 @@ protoray.exe render ../../benchmark/powerplant/powerplant.mesh -no-mtl -r diffus
 ```
 
 ## Benchmark results - 3840x2160 - OptiX 5.1 - OptiX Prime API
-<p align="center">
-![benchmark](docs/bench.png "Diffuse Path Tracing Performance - Million Rays Per Second (Higher is Better)")
-</p>
+<p align="center"><img src="docs/bench.png" title="Diffuse Path Tracing Performance - Million Rays Per Second (Higher is Better)" /></p>
 
 ## Todos
  - Re-enable Linux support
