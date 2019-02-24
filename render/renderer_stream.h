@@ -34,7 +34,7 @@ public:
         RaySimd ray;
         ray.org = inputRay.org;
         ray.dir = inputRay.dir;
-        ray.far = inputRay.far;
+        ray.tfar = inputRay.tfar;
         RayStream<streamSize> rays;
         rays.setA(0, ray);
         HitStream<streamSize> hits;
@@ -53,7 +53,7 @@ public:
         result.set("mat", scene->getMaterialName(matId));
         result.set("matId", matId);
         result.set("prim", primId);
-        result.set("dist", toScalar(ray.far));
+        result.set("dist", toScalar(ray.tfar));
         result.set("p", toScalar(ray.getHitPoint()));
         result.set("Ng", toScalar(ctx.Ng));
         result.set("N", toScalar(ctx.f.N));

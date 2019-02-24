@@ -20,12 +20,14 @@
 #include "atomic.h"
 #include "memory.h"
 
+#include <atomic>
+
 namespace prt {
 
 struct ALIGNED_CACHE RefHeader
 {
-    Atomic<uint32_t> refCount; // reference count
-    void* data;                // pointer to the allocated data
+    std::atomic<uint32_t> refCount;							// reference count
+    void* data;												// pointer to the allocated data
 };
 
 template <class T>
@@ -59,7 +61,7 @@ public:
     template <class T1>
     FORCEINLINE ref(const ref<T1>& other) : ptr(other.ptr)
     {
-        static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
+        //static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
         incRef();
     }
 
@@ -71,7 +73,7 @@ public:
     template <class T1>
     FORCEINLINE ref(ref<T1>&& other) : ptr(other.ptr)
     {
-        static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
+        //static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
         other.ptr = 0;
     }
 
@@ -91,7 +93,7 @@ public:
     template <class T1>
     FORCEINLINE ref<T>& operator =(const ref<T1>& other)
     {
-        static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
+        //static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
         other.incRef();
         decRef();
         ptr = other.ptr;
@@ -107,7 +109,7 @@ public:
     template <class T1>
     FORCEINLINE ref<T>& operator =(ref<T1>&& other)
     {
-        static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
+        //static_assert((T*)1 == (T*)(T1*)1, "ref conversion not supported");
         ref<T>(std::move(other)).swap(*this);
         return *this;
     }

@@ -52,8 +52,10 @@ std::string convertFilename(const std::string& filename)
 
 bool isDirectory(const std::string& filename)
 {
-    struct stat s;
-    return stat(filename.c_str(), &s) == 0 && S_ISDIR(s.st_mode);
+    //struct stat s;
+    //return stat(filename.c_str(), &s) == 0 && S_ISDIR(s.st_mode);
+
+    return false;
 }
 
 // Temp files
@@ -92,15 +94,15 @@ std::string makeTempFilename()
 {
     LockGuard<Mutex> lockGuard(mutex);
 
-	std::stringstream stringStream;
-	stringStream << tempPath << ".temp-";
+    std::stringstream stringStream;
+    stringStream << tempPath << ".temp-";
 
-	for (int i = 0; i < 4; ++i)
-	{
-		stringStream << std::hex << std::setw(8) << std::setfill('0') << random.getUint();
-	}
+    for (int i = 0; i < 4; ++i)
+    {
+        stringStream << std::hex << std::setw(8) << std::setfill('0') << random.getUint();
+    }
 
-	return stringStream.str();
+    return stringStream.str();
 }
 
 } // namespace prt

@@ -15,10 +15,13 @@
 ## ======================================================================== ##
 
 project(protoray)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.7)
 
 # Modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
+# Binary output folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/protoray-bin)
 
 # Compiler
 set(CMAKE_CXX_COMPILER "icpc")
@@ -51,8 +54,36 @@ include_directories(${PROJECT_SOURCE_DIR})
 find_package(TBB REQUIRED)
 include_directories(${TBB_INCLUDE_DIR})
 
+add_definitions(-DWIN32_LEAN_AND_MEAN)
+add_definitions(-DNOMINMAX)
+add_definitions(-D_USE_MATH_DEFINES)
+add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE)
+
+IF ( MSVC )
+    MESSAGE ( STATUS "Setting MSVC MT switches")
+    SET (
+      CMAKE_CXX_FLAGS_DEBUG
+        "/MT ${CMAKE_CXX_FLAGS_DEBUG}"
+        CACHE STRING "MSVC MT flags " FORCE
+    )
+
+    SET (
+      CMAKE_CXX_FLAGS_RELEASE
+        "/MT ${CMAKE_CXX_FLAGS_RELEASE}"
+        CACHE STRING "MSVC MT flags " FORCE
+    )
+ENDIF ( MSVC )
+
+if (MSVC_VERSION GREATER_EQUAL "1900")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
+    if (_cpp_latest_flag_supported)
+        add_compile_options("/std:c++latest")
+    endif()
+endif()
+
 # Embree
-option(EMBREE_SUPPORT "Embree support" ON)
+option(EMBREE_SUPPORT "Embree support" OFF)
 if(EMBREE_SUPPORT)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEMBREE_SUPPORT")
     set(EMBREE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/../embree/include CACHE STRING "Embree include path")
@@ -64,16 +95,15 @@ endif()
 # CUDA and OptiX
 option(CUDA_SUPPORT "CUDA support" OFF)
 if(CUDA_SUPPORT)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUDA_SUPPORT -DPRIME_ATOM32_GCC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUDA_SUPPORT")
     find_package(CUDA REQUIRED)
-    set(CUDA_HOST_COMPILER gcc)
     set(CUDA_PROPAGATE_HOST_FLAGS OFF)
-    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11 -O3 -DNDEBUG -use_fast_math -Xptxas -v -keep -gencode arch=compute_35,code=sm_35 -gencode arch=compute_37,code=sm_37 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52 -gencode arch=compute_53,code=sm_53 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_61,code=sm_61 -gencode arch=compute_62,code=sm_62 -gencode arch=compute_70,code=sm_70")
+    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11 -O3 -DNDEBUG -use_fast_math -Xptxas -v -keep -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_61,code=sm_61 -gencode arch=compute_70,code=sm_70 -gencode arch=compute_75,code=sm_75")
     include_directories(${CUDA_INCLUDE_DIRS})
 
-    set(OPTIX_INSTALL_DIR /opt/optix CACHE STRING "OptiX install path")
-    include_directories(${OPTIX_INSTALL_DIR}/include)
-    link_directories(${OPTIX_INSTALL_DIR}/lib64)
+    find_package(Optix REQUIRED)
+    add_definitions(-DUSEOPTIX)
+    include_directories(${OPTIX_INCLUDE_DIR})
 endif()
 
 if(APPLE)
@@ -94,7 +124,7 @@ set(SRC_COMMON
     camera/pinhole_camera.h
     camera/thin_lens_camera.h
     sys/array.h
-    sys/atomic.h
+    #sys/atomic.h
     sys/blob.h
     sys/common.h
     sys/condition.h
@@ -285,6 +315,9 @@ if(EMBREE_SUPPORT)
 endif()
 
 if(CUDA_SUPPORT)
+    #file(GLOB CUDA_FILES *.cu)
+    #CUDA_COMPILE(CU_O ${CUDA_FILES})
+
     set(SRC_HOST
         ${SRC_HOST}
         accel/optix/optix_intersector_stream_cuda.h
@@ -322,17 +355,19 @@ if(CUDA_SUPPORT)
 endif()
 
 if(CUDA_SUPPORT)
-    #target_link_libraries(protoray cudart_static)
     cuda_add_executable(protoray ${SRC_HOST})
-    target_link_libraries(protoray optix_prime)
+    target_link_libraries(protoray ${CU_O})
+    target_link_libraries(protoray ${CUDA_LIBRARIES} ${OPTIX_LIB})
+    set_property(TARGET protoray PROPERTY CXX_STANDARD 17)
+    set_property(TARGET protoray PROPERTY CXX_STANDARD_REQUIRED ON)
 else()
     add_executable(protoray ${SRC_HOST})
 endif()
 
 set_target_properties(protoray PROPERTIES COMPILE_FLAGS ${HOST_CXX_FLAGS})
-if(NOT APPLE)
-    target_link_libraries(protoray rt)
-endif()
+#if(NOT APPLE)
+#    target_link_libraries(protoray rt)
+#endif()
 
 # TBB
 target_link_libraries(protoray ${TBB_LIBRARIES})

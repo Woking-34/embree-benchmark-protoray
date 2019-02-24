@@ -16,6 +16,8 @@
 
 #include "sys/blob.h"
 #include "triangle_mesh.h"
+#include <fstream>
+#include <iostream>
 
 namespace prt {
 
@@ -302,6 +304,16 @@ void TriangleMesh::postIntersect(vbool m, const RaySimd& ray, const HitSimd& hit
     set(backfacing, ctx.Ng, -ctx.Ng);
 }
 
+bool is_big_endian(void)
+{
+    union {
+        uint32_t i;
+        char c[4];
+    } bint = { 0x01020304 };
+
+    return bint.c[0] == 1;
+}
+
 Stream& operator >>(Stream& ism, TriangleMesh& mesh)
 {
     ism >> mesh.bounds;
@@ -314,6 +326,48 @@ Stream& operator >>(Stream& ism, TriangleMesh& mesh)
     ism.readFull(mesh.indices.getData(), mesh.indices.getSize() * sizeof(Vec3i));
     ism.readFull(mesh.materialIds.getData(), mesh.materialIds.getSize() * sizeof(int));
     ism.readFull(mesh.vertexAttribs.getData(), mesh.vertexAttribs.getSize() * sizeof(float));
+
+	if(0)
+    {
+        std::ofstream myfile;
+        myfile.open("example.ply", std::ios::out | std::ios::binary);
+        myfile << "ply" << std::endl;
+        if (is_big_endian())
+        {
+            myfile << "format binary_big_endian 1.0" << std::endl;
+        }
+        else
+        {
+            myfile << "format binary_little_endian 1.0" << std::endl;
+        }
+        myfile << "comment hasNormals " << hasNormals << std::endl;
+        myfile << "comment hasTexcoords " << hasTexcoords << std::endl;
+        myfile << "element vertex " << vertexCount << std::endl;
+        myfile << "property float x" << std::endl;
+        myfile << "property float y" << std::endl;
+        myfile << "property float z" << std::endl;
+        if (hasNormals)
+        {
+            myfile << "property float nx" << std::endl;
+            myfile << "property float ny" << std::endl;
+            myfile << "property float nz" << std::endl;
+        }
+        if (hasTexcoords)
+        {
+            myfile << "property float u" << std::endl;
+            myfile << "property float v" << std::endl;
+        }
+        myfile << "element face " << triangleCount << std::endl;
+        myfile << "property list uchar int vertex_index" << std::endl;
+        myfile << "end_header" << std::endl;
+        myfile.write((const char*)(mesh.vertexAttribs.getData()), mesh.vertexAttribs.getSize() * sizeof(float));
+        for (int i = 0; i < triangleCount; ++i)
+        {
+            const unsigned char vertCount = 3;
+            myfile.write((const char*)&vertCount, sizeof(vertCount));
+            myfile.write((const char*)(mesh.indices.getData()+i), sizeof(Vec3i));
+        }
+    }
 
     ism >> mesh.materialNames;
     return ism;

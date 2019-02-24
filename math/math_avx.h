@@ -80,17 +80,17 @@ FORCEINLINE unsigned int bitScan(uint32_t x, unsigned int prevPos)
 }
 
 #ifdef NDEBUG // FIXME: GCC workaround for "impossible constraint in asm"
-FORCEINLINE void shiftRight128(uint64_t& low, uint64_t& high, int count)
-{
-    asm("shrd %2,%1,%0" : "=r"(low) : "r"(high), "J"(count), "0"(low) : "flags");
-    high >>= count;
-}
-
-FORCEINLINE void shiftLeft128(uint64_t& low, uint64_t& high, int count)
-{
-    asm("shld %2,%1,%0" : "=r"(high) : "r"(low), "J"(count), "0"(high) : "flags");
-    low <<= count;
-}
+//FORCEINLINE void shiftRight128(uint64_t& low, uint64_t& high, int count)
+//{
+//    asm("shrd %2,%1,%0" : "=r"(low) : "r"(high), "J"(count), "0"(low) : "flags");
+//    high >>= count;
+//}
+//
+//FORCEINLINE void shiftLeft128(uint64_t& low, uint64_t& high, int count)
+//{
+//    asm("shld %2,%1,%0" : "=r"(high) : "r"(low), "J"(count), "0"(high) : "flags");
+//    low <<= count;
+//}
 #else
 FORCEINLINE void shiftRight128(uint64_t& low, uint64_t& high, int count)
 {

@@ -219,7 +219,7 @@ private:
 
             for (int i = missCount, o = 0; i < rayCount; i += simdSize, o += simdSize)
             {
-                vbool mHit = state->ray.far.getA(o) == 0.f;
+                vbool mHit = state->ray.tfar.getA(o) == 0.f;
                 vfloat throughput = state->throughput.getA(o) + select(mHit, vfloat(0.f), vfloat(1.f));
                 state->throughput.setA(o, throughput);
             }

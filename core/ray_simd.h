@@ -27,7 +27,7 @@ struct RaySimd
 {
     Vec3vf org; // origin
     Vec3vf dir; // direction
-    vfloat far; // hit distance
+    vfloat tfar; // hit distance
 
     FORCEINLINE float* getOrgX() { return &org.x[0]; }
     FORCEINLINE float* getOrgY() { return &org.y[0]; }
@@ -35,54 +35,54 @@ struct RaySimd
     FORCEINLINE float* getDirX() { return &dir.x[0]; }
     FORCEINLINE float* getDirY() { return &dir.y[0]; }
     FORCEINLINE float* getDirZ() { return &dir.z[0]; }
-    FORCEINLINE float* getFar()  { return &far[0]; }
+    FORCEINLINE float* getFar()  { return &tfar[0]; }
 
     FORCEINLINE void init(const Vec3vf& org, const Vec3vf& dir)
     {
         this->org = org;
         this->dir = dir;
-        this->far = posMax;
+        this->tfar = posMax;
     }
 
-    FORCEINLINE void init(const Vec3vf& org, const Vec3vf& dir, vfloat near)
+    FORCEINLINE void init(const Vec3vf& org, const Vec3vf& dir, vfloat tnear)
     {
-        this->org = org + near * dir;
+        this->org = org + tnear * dir;
         this->dir = dir;
-        this->far = posMax;
+        this->tfar = posMax;
     }
 
-    FORCEINLINE void init(const Vec3vf& org, const Vec3vf& dir, vfloat near, vfloat far)
+    FORCEINLINE void init(const Vec3vf& org, const Vec3vf& dir, vfloat tnear, vfloat tfar)
     {
-        this->org = org + near * dir;
+        this->org = org + tnear * dir;
         this->dir = dir;
-        this->far = far - near;
+        this->tfar = tfar - tnear;
     }
 
     FORCEINLINE vbool isHit() const
     {
-        return far < float(posMax);
+        return tfar < float(posMax);
     }
 
     FORCEINLINE Vec3vf getHitPoint() const
     {
-        return org + far * dir;
+        return org + tfar * dir;
     }
 
     FORCEINLINE Vec3vf getHitPoint(vfloat& eps) const
     {
         Vec3vf p = getHitPoint();
-        eps = max(far, reduceMax(abs(p))) * 0x1.fp-18;
+        eps = max(tfar, reduceMax(abs(p))) * 0x1.fp-18;
         return p;
     }
 
     FORCEINLINE vbool isOccluded() const
     {
-        return far == zero;
+        return tfar == zero;
     }
 
     FORCEINLINE vbool isNotOccluded() const
     {
-        return far > zero;
+        return tfar > zero;
     }
 };
 

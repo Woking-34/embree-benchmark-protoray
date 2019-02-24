@@ -152,7 +152,7 @@ public:
         result.set("mat", scene->getMaterialName(matId));
         result.set("matId", matId);
         result.set("primId", hit.primId);
-        result.set("dist", ray.far);
+        result.set("dist", ray.tfar);
         result.set("p", ray.getHitPoint());
         result.set("Ng", ctx.Ng);
         result.set("N", ctx.f.N);

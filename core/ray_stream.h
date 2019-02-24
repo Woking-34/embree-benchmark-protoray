@@ -333,7 +333,7 @@ struct RayStream
 {
     RayStreamChannel3<float, size> org;
     RayStreamChannel3<float, size> dir;
-    RayStreamChannel<float, size> far;
+    RayStreamChannel<float, size> tfar;
 
     FORCEINLINE float* getOrgX() { return org.getX(); }
     FORCEINLINE float* getOrgY() { return org.getY(); }
@@ -341,34 +341,34 @@ struct RayStream
     FORCEINLINE float* getDirX() { return dir.getX(); }
     FORCEINLINE float* getDirY() { return dir.getY(); }
     FORCEINLINE float* getDirZ() { return dir.getZ(); }
-    FORCEINLINE float* getFar()  { return far.get(); }
+    FORCEINLINE float* getFar()  { return tfar.get(); }
 
     FORCEINLINE void setA(int i, const RaySimd& ray)
     {
         org.setA(i, ray.org);
         dir.setA(i, ray.dir);
-        far.setA(i, ray.far);
+        tfar.setA(i, ray.tfar);
     }
 
     FORCEINLINE void set(int i, const RaySimd& ray)
     {
         org.set(i, ray.org);
         dir.set(i, ray.dir);
-        far.set(i, ray.far);
+        tfar.set(i, ray.tfar);
     }
 
     FORCEINLINE void packSet(vbool m, int i, const RaySimd& ray)
     {
         org.packSet(m, i, ray.org);
         dir.packSet(m, i, ray.dir);
-        far.packSet(m, i, ray.far);
+        far.packSet(m, i, ray.tfar);
     }
 
     FORCEINLINE void getA(int i, RaySimd& ray) const
     {
         ray.org = org.getA(i);
         ray.dir = dir.getA(i);
-        ray.far = far.getA(i);
+        ray.tfar = tfar.getA(i);
     }
 
     template <class RayStreamIdT>
@@ -376,12 +376,12 @@ struct RayStream
     {
         ray.org = org.get(m, i);
         ray.dir = dir.get(m, i);
-        ray.far = far.get(m, i);
+        ray.tfar = tfar.get(m, i);
     }
 
     FORCEINLINE bool isHit(int i) const
     {
-        return far[i] < float(posMax);
+        return tfar[i] < float(posMax);
     }
 };
 

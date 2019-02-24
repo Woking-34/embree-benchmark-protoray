@@ -74,7 +74,8 @@ struct RayCuda
     CUDA_DEV_FORCEINLINE float3 getHitPoint(const HitCuda& hit, float& eps) const
     {
         float3 p = getHitPoint(hit);
-        eps = max(hit.t, reduceMax(abs(p))) * 0x1.fp-18;
+		//eps = max(hit.t, reduceMax(abs(p))) *0x1.fp-18;
+		eps = fmax(hit.t, reduceMax(abs(p))) * 7.39098e-06;
         return p;
     }
 };

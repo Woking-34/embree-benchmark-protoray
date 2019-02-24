@@ -179,6 +179,8 @@ inline std::ostream& operator <<(std::ostream& osm, const Props& props)
 
         osm << i.first << "=" << i.second;
     }
+
+    return osm;
 }
 
 } // namespace prt

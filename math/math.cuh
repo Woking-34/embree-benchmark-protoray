@@ -30,7 +30,9 @@ CUDA_DEV_FORCEINLINE float rcp(float a)
 
 CUDA_DEV_FORCEINLINE float3 rcpSafe(const float3& a)
 {
-    const float eps = 0x1p-80f;
+    //const float eps = 0x1p-80f;
+    const float eps = 8.27181e-25;
+
     float3 r;
     r.x = 1.0f / (fabs(a.x) > eps ? a.x : copysign(eps, a.x));
     r.y = 1.0f / (fabs(a.y) > eps ? a.y : copysign(eps, a.y));
@@ -60,7 +62,8 @@ CUDA_DEV_FORCEINLINE int asInt(float a)
 
 CUDA_DEV_FORCEINLINE float toFloatUnorm(unsigned int a)
 {
-    return __uint2float_rd(a) * 0x1.p-32f;
+    //return __uint2float_rd(a) * 0x1.p-32f;
+    return __uint2float_rd(a) * 2.32831e-10;
 }
 
 template <class T>

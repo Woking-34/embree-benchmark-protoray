@@ -42,12 +42,14 @@ FORCEINLINE T sqr(const T& x)
 template <class T>
 FORCEINLINE T degToRad(T x)
 {
+    const float pi = 3.14159265358979323846f;
     return x * (float(pi)/T(180.f));
 }
 
 template <class T>
 FORCEINLINE T radToDeg(T x)
 {
+    const float pi = 3.14159265358979323846f;
     return x * (T(180.f)/float(pi));
 }
 

@@ -244,7 +244,7 @@ private:
                 vint pathId = state->pathId.get(i);
 
                 vfloat L = stateI->L.get(m, pathId);
-                vfloat shadowRayFar = state->shadowRay.far.getA(o);
+                vfloat shadowRayFar = state->shadowRay.tfar.getA(o);
                 vbool mDirMiss = m & (shadowRayFar > 0.0f);
                 set(mDirMiss, L, L + (throughput * 0.5f)); // with MIS weight
                 stateO->L.setA(o, L);

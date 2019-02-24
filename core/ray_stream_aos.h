@@ -61,7 +61,7 @@ public:
         v[i].dir_z = ray.dir.z;
 
         v[i].tnear = 0.0f;
-        v[i].tfar = ray.far;
+        v[i].tfar = ray.tfar;
 
         v[i].mask = -1;
         v[i].time = 0.0f;
@@ -127,7 +127,7 @@ public:
         v[i].ray.dir_z = ray.dir.z;
 
         v[i].ray.tnear = 0.0f;
-        v[i].ray.tfar = ray.far;
+        v[i].ray.tfar = ray.tfar;
 
         v[i].ray.mask = -1;
         v[i].ray.time = 0.0f;
@@ -145,7 +145,7 @@ public:
         ray.dir.y = v[i].ray.dir_y;
         ray.dir.z = v[i].ray.dir_z;
 
-        ray.far = v[i].ray.tfar;
+        ray.tfar = v[i].ray.tfar;
     }
 
     FORCEINLINE void getHit(int i, Hit& hit)

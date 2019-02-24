@@ -30,7 +30,7 @@ public:
     template <class Kernel>
     static void run(const Vec2i& gridSize, Kernel&& kernel)
     {
-        AlignedAtomic<int> nextTaskId = 0;
+        std::atomic<int> nextTaskId = 0;
         int taskCount = gridSize.x * gridSize.y;
 
         tbb::parallel_for(tbb::blocked_range<int>(0, getThreadCount()), [&](const tbb::blocked_range<int>& r)

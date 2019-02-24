@@ -25,6 +25,7 @@ CUDA_DEV_FORCEINLINE float3 cosineSampleHemisphere(const float2& s)
     float cosTheta = sqrt(s.x);
     float sinTheta = sqrt(1.0f-s.x);
 
+    const float pi = 3.14159265358979323846f;
     float phi = 2.0f*float(pi) * s.y;
 
     //pdf = cosTheta * (1.0f/float(pi));
@@ -41,6 +42,8 @@ CUDA_DEV_FORCEINLINE float3 cosineSampleHemisphere(const float2& s)
 CUDA_DEV_FORCEINLINE float2 uniformSampleDisk(const float2& s)
 {
     float r = sqrt(s.x);
+
+    const float pi = 3.14159265358979323846f;
     float theta = 2.0f*float(pi) * s.y;
 
     float sinTheta, cosTheta;

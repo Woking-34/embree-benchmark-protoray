@@ -1,45 +1,44 @@
-Compiling ProtoRay
-==================
+# ProtoRay - Support for Windows CUDA OptiX builds
+Quick and dirty fixes to support Windows CUDA OptiX builds - work in progress. OptiX default search path set to version 5.1.1 - project uses OptiX Prime API.
 
-Requirements: Linux, CMake, ICC, GCC, CUDA, Embree, OptiX
+<p align="center"><img src="docs/screenshot_0001.png" width="600" /></p>
+<p align="center">**Diffuse Path Tracing - San Miguel**</p>
+<p align="center"><img src="docs/screenshot_0003.png" width="600" /></p>
+<p align="center">**Diffuse Path Tracing - Power Plant**</p>
 
-By default, you have to put the Embree source directory 'embree' in the same directory as the ProtoRay source directory, and the Embree build directory must be called 'embree-build'. These paths can be changed in CMake, e.g.
+## Requirements
+ - [TBB](https://www.threadingbuildingblocks.org/) - Threading Building Blocks
+ - CMake
+ - CUDA and OptiX
+ - extract mesh files (7z e sanmiguel.7z and 7z e powerplant.7z)
 
-- git clone https://github.com/embree/embree.git embree
-- cd embree
-- mkdir embree-build
-- cd embree-build
-- ccmake .. (set CMake variables, configure + generate)
-- make 
+## Compile, build and run
+```
+set TBB_ROOT=<my_tbb_install_dir>
+set PATH=%PATH%;C:\ProgramData\NVIDIA Corporation\OptiX SDK 5.1.1\bin64;%TBB_ROOT%\bin\intel64\vc14;
 
-- git clone https://github.com/embree/embree-benchmark-protoray.git protoray
-- cd protoray
-- mkdir protoray-build
-- cd protoray-build
-- ccmake .. (set CMake variables (including path to "embree" directory, configure + generate)
-- make 
+git clone https://github.com/Woking-34/embree-benchmark-protoray.git protoray
+cd protoray
+mkdir protoray-build
+cd protoray-build
+cmake .. -G"Visual Studio 15 2017 Win64" -DCUDA_SUPPORT=1
+cmake --build . --target protoray --config Release
 
-For ProtoRay you can set the explicit target ISA with the HOST_ISA CMake option (e.g., CORE-AVX2 for HSW, MIC-AVX512 for KNL, CORE-AVX512 for SKX).
+cd ..
+cd protoray-bin
+cd Release
+protoray.exe render ../../benchmark/sanmiguel/sanmiguel.mesh -no-mtl -r diffuse -size 1280,720 -dev cuda -a optix -spp 64
+protoray.exe render ../../benchmark/powerplant/powerplant.mesh -no-mtl -r diffuse -size 1280,720 -dev cuda -a optix -spp 64
+```
 
+## Benchmark results - 3840x2160 - OptiX 5.1 - OptiX Prime API
+<p align="center">
+![benchmark](docs/bench.png "Diffuse Path Tracing Performance - Million Rays Per Second (Higher is Better)")
+</p>
 
-Running ProtoRay
-================
-
-Before rendering a scene in .obj format, you have to build a corresponding .mesh file:
-
-    ./protoray build scene.obj
-
-
-Render with single-ray diffuse path tracing:
-
-    ./protoray render scene.mesh -no-mtl -r diffuse -spp 64
-
-
-Render with packet diffuse path tracing:
-
-    ./protoray render scene.mesh -no-mtl -r diffusePacket -size 1920,1080 -spp 64
-
-
-Render with stream diffuse path tracing:
-
-    ./protoray render scene.mesh -no-mtl -r diffuseStream -streamSize 256 -size 1920,1080 -spp 64
+## Todos
+ - Re-enable Linux support
+ - Fix OptiX 6.0 performance degradation on RTX GPUs
+ - Support for RTX/Turing acceleration (GeometryTriangles API)
+ - More robust CMake FindOptiX support (OPTIX_find_api_library(optix 51) vs OPTIX_find_api_library(optix 6.0.0))
+ - More sample scenes
