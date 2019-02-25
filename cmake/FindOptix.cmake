@@ -80,7 +80,7 @@ set ( SEARCH_PATHS
 
 set(OPTIX_INCLUDE_DIR
     "C:/ProgramData/NVIDIA Corporation/OptiX SDK 5.1.1/include"
-    #C:/ProgramData/NVIDIA Corporation/OptiX SDK 6.0.0/include"
+    #"C:/ProgramData/NVIDIA Corporation/OptiX SDK 6.0.0/include"
 )
 
 if (WIN32) 
