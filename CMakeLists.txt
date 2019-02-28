@@ -97,6 +97,10 @@ option(CUDA_SUPPORT "CUDA support" OFF)
 if(CUDA_SUPPORT)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUDA_SUPPORT")
     find_package(CUDA REQUIRED)
+
+    MESSAGE(STATUS "CUDA_TOOLKIT_ROOT_DIR: " ${CUDA_TOOLKIT_ROOT_DIR})
+    MESSAGE(STATUS "CUDA_NVCC_EXECUTABLE: " ${CUDA_NVCC_EXECUTABLE})
+
     set(CUDA_PROPAGATE_HOST_FLAGS OFF)
     set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -std=c++11 -O3 -DNDEBUG -use_fast_math -Xptxas -v -keep -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_61,code=sm_61 -gencode arch=compute_70,code=sm_70 -gencode arch=compute_75,code=sm_75")
     include_directories(${CUDA_INCLUDE_DIRS})
