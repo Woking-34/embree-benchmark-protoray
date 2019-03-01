@@ -79,8 +79,8 @@ set ( SEARCH_PATHS
 )
 
 set(OPTIX_INCLUDE_DIR
-    "C:/ProgramData/NVIDIA Corporation/OptiX SDK 5.1.1/include"
-    #"C:/ProgramData/NVIDIA Corporation/OptiX SDK 6.0.0/include"
+    #"C:/ProgramData/NVIDIA Corporation/OptiX SDK 5.1.1/include"
+    "C:/ProgramData/NVIDIA Corporation/OptiX SDK 6.0.0/include"
 )
 
 if (WIN32) 
@@ -103,25 +103,25 @@ endif()
 if (OPTIX_ROOT_DIR)
 message(STATUS "OPTIX_ROOT_DIR: ${OPTIX_ROOT_DIR}" )
   if (WIN32) 
-    #-------- Locate DLLS
-    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix.1.dll"       "bin64/optix.51.dll" "")
-    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optixu.1.dll"      "bin64/optixu.1.dll" "")
-    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix_prime.1.dll" "bin64/optix_prime.1.dll" "")
-    
-    #-------- Locate LIBS
-    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix.1.lib"       "lib64/optix.51.lib" "")
-    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optixu.1.lib"      "lib64/optixu.1.lib" "")
-    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix_prime.1.lib" "lib64/optix_prime.1.lib" "")
-    
     ##-------- Locate DLLS
-    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix.1.dll"       "bin64/optix.6.0.0.dll" "")
-    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optixu.1.dll"      "bin64/optixu.6.0.0.dll" "")
-    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix_prime.1.dll" "bin64/optix_prime.6.0.0.dll" "")
+    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix.1.dll"       "bin64/optix.51.dll" "")
+    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optixu.1.dll"      "bin64/optixu.1.dll" "")
+    #_find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix_prime.1.dll" "bin64/optix_prime.1.dll" "")
     #
     ##-------- Locate LIBS
-    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix.1.lib"       "lib64/optix.6.0.0.lib" "")
-    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optixu.1.lib"      "lib64/optixu.6.0.0.lib" "")
-    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix_prime.1.lib" "lib64/optix_prime.6.0.0.lib" "")
+    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix.1.lib"       "lib64/optix.51.lib" "")
+    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optixu.1.lib"      "lib64/optixu.1.lib" "")
+    #_find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix_prime.1.lib" "lib64/optix_prime.1.lib" "")
+
+    #-------- Locate DLLS
+    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix.1.dll"       "bin64/optix.6.0.0.dll" "")
+    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optixu.1.dll"      "bin64/optixu.6.0.0.dll" "")
+    _find_files( OPTIX_DLL OPTIX_ROOT_DIR "bin/optix_prime.1.dll" "bin64/optix_prime.6.0.0.dll" "")
+
+    #-------- Locate LIBS
+    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix.1.lib"       "lib64/optix.6.0.0.lib" "")
+    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optixu.1.lib"      "lib64/optixu.6.0.0.lib" "")
+    _find_files( OPTIX_LIB OPTIX_ROOT_DIR "lib/optix_prime.1.lib" "lib64/optix_prime.6.0.0.lib" "")
     if(NOT OPTIX_LIB)
       message(STATUS "setting OPTIX_LIB to ${OPTIX_LIB}" )
     endif()

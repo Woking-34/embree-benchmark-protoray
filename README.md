@@ -1,5 +1,5 @@
 # ProtoRay - Support for Windows CUDA OptiX builds
-Quick and dirty fixes to support Windows CUDA OptiX builds - work in progress. OptiX default search path set to version 5.1.1 - project uses OptiX Prime API.
+Quick and dirty fixes to support Windows CUDA OptiX builds - work in progress. OptiX default search path set to version 6.0.0 - project uses OptiX Prime API.
 
 <p align="center"><img src="docs/screenshot_0001.png" width="600" /></p>
 <p align="center">Diffuse Path Tracing - San Miguel</p>
@@ -15,7 +15,7 @@ Quick and dirty fixes to support Windows CUDA OptiX builds - work in progress. O
 ## Compile, build and run
 ```
 set TBB_ROOT=<my_tbb_install_dir>
-set PATH=%PATH%;C:\ProgramData\NVIDIA Corporation\OptiX SDK 5.1.1\bin64;%TBB_ROOT%\bin\intel64\vc14;
+set PATH=%PATH%;C:\ProgramData\NVIDIA Corporation\OptiX SDK 6.0.0\bin64;%TBB_ROOT%\bin\intel64\vc14;
 
 git clone https://github.com/Woking-34/embree-benchmark-protoray.git protoray
 cd protoray
